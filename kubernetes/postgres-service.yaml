@@ -1,0 +1,13 @@
+# This file is to test how to deploy Backstage in kubernetes
+# Following the tutorial: https://backstage.io/docs/deployment/k8s/
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres
+  namespace: backstage
+spec:
+  selector:
+    app: postgres
+  ports:
+    - port: 5432

@@ -1,0 +1,52 @@
+# This file is to test how to deploy Backstage in kubernetes
+# Following the tutorial: https://backstage.io/docs/deployment/k8s/
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: postgres
+  namespace: backstage
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: postgres
+  template:
+    metadata:
+      labels:
+        app: postgres
+    spec:
+      securityContext:
+        fsGroup: 70
+        fsGroupChangePolicy: "Always"
+      containers:
+        - name: postgres
+          image: postgres:13.2-alpine
+          env:
+            #- name: POSTGRES_USER
+            #  value: admin
+            #- name: POSTGRES_PASSWORD
+            #  value: admin
+            - name: PGDATA
+              value: /var/lib/postgresql/data
+          resources:
+            requests:
+              cpu: "100m"
+              memory: "256Mi"
+            limits:
+              cpu: "500m"
+              memory: "512Mi"
+          imagePullPolicy: 'IfNotPresent'
+          ports:
+            - containerPort: 5432
+          envFrom:
+            - secretRef:
+                name: postgres-secrets
+          volumeMounts:
+            - mountPath: /var/lib/postgresql/data
+              name: postgresdb
+              subPath: data
+      volumes:
+        - name: postgresdb
+          persistentVolumeClaim:
+            claimName: postgres-storage-claim

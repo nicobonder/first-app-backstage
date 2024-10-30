@@ -1,0 +1,32 @@
+# This file is to test how to deploy Backstage in kubernetes
+# Following the tutorial: https://backstage.io/docs/deployment/k8s/
+
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: postgres-storage
+  namespace: backstage
+  labels:
+    type: local # this creates a volume using local disk on Kubernetes nodes. More likely in a production scenario, you'd want to use a more highly available type of PersistentVolume.
+spec:
+  storageClassName: manual
+  capacity:
+    storage: 2G
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  hostPath:
+    path: '/mnt/data'
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: postgres-storage-claim
+  namespace: backstage
+spec:
+  storageClassName: manual
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2G
