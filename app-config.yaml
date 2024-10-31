@@ -82,7 +82,7 @@ auth:
 scaffolder:
   # see https://backstage.io/docs/features/software-templates/configuration for software template options
   github:
-    token: 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  #${GITHUB_TOKEN}
+    token: #${GITHUB_TOKEN}
     path:
       owner: nicobonder # respository owner GigHub username
       repository: first-app-backstage # repository name
